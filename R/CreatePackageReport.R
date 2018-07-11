@@ -85,7 +85,10 @@ CreatePackageReport <- function(pkg_name
     
     silence_logger()
     rmarkdown::render(
-        system.file(file.path("package_report", "package_report.Rmd"), package = "pkgnet")
+        system.file(file.path("package_report", "package_report.Rmd")
+                    , package = "pkgnet"
+                    , lib.loc = .GetLibPaths()
+                    )
         , output_file = report_path
         , quiet = TRUE
         , params = list(
