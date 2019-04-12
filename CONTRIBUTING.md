@@ -6,11 +6,7 @@ The goal of this guide is to help you contribute to `pkgnet` as quickly and as e
 1. [Creating an Issue](#issues)
 2. [Submitting a Pull Request](#prs)
 3. [Code Style](#style)
-4. [Running Tests Locally](#testing)
-5. [Package Versioning](#version)
-6. [Releasing to CRAN (for maintainer)](#cran)
 
-***
 ## Creating an Issue <a name="issues"></a>
 
 To report bugs, request features, or ask questions about the structure of the code, please [open an issue](https://github.com/UptakeOpenSource/pkgnet/issues).
@@ -41,7 +37,6 @@ Good feature requests will note all of the following:
 
 If you're interested in submitting a pull request to address the bug you're reporting, please indicate that in the issue.
 
-***
 ## Submitting a Pull Request <a name="prs"></a>
 
 We welcome [pull requests](https://help.github.com/articles/about-pull-requests/) from anyone interested in contributing to `pkgnet`. This section describes best practices for submitting PRs to this project.
@@ -64,7 +59,6 @@ To submit a PR, please follow these steps:
 
 We will try to review PRs promptly and get back to you within a few days.
 
-***
 ## Code Style <a name="style"></a>
 
 The code in this project should follow a standard set of conventions for style in R code.
@@ -73,7 +67,7 @@ The code in this project should follow a standard set of conventions for style i
 
 We use [roxygen2](https://github.com/klutometis/roxygen) to auto-generate our dependency lists in the package's `NAMESPACE` file. If you use a function from any package other than this package and `base`, you need to add `#' @importFrom package_name function_name` in the roxygen documentation of the function you are adding this call to.
 
-All function non-base function calls should be namespaced with `::`. For example:
+All function non-base funciton calls should be namespaced with `::`. For example:
 
 ```{r}
 #' @importFrom data.table data.table
@@ -84,7 +78,7 @@ some_function <- function(n){
 }
 ```
 
-You do not need to namespace special operators in the case where doing so would hurt readability. For example, `%>%` from `magrittr` and `:=` from `data.table` do not need `::` namespacing.
+You do not need to namespace special operators in the case where doing so would hurt readablility. For example, `%>%` from `magrittr` and `:=` from `data.table` do not need `::` namespacing.
 
 If you are adding new dependencies to the package (i.e. using an entirely new package), you need to also add that dependency to the `Imports` section of the [DESCRIPTION file](https://github.com/UptakeOpenSource/pkgnet/blob/master/DESCRIPTION).
 
@@ -101,7 +95,7 @@ some_vector <- c(TRUE, FALSE, FALSE)
 Longer calls should use indentation of the following form:
 
 ```{r}
-sample_list <- list(
+sample_ist <- list(
     norm_sample = rnorm(100)
     , unif_sample = runif(100)
     , t_sample = rt(100, df = 100)
@@ -144,7 +138,7 @@ For example, the code below would be an acceptable submission for a function tha
 ```{r}
 #' @title Plot Random Numbers
 #' @name plot_random_numbers
-#' @description Given a positive integer, generate two random draws from the standard normal distribution and plot them against each other
+#' @description Given a positive integer, generate two random drawns from the standard normal distribution and plot them against each other
 #' @param num_samples A positive integer indicating the number of samples. Default is 100.
 #' @importFrom data.table data.table
 #' @importFrom graphics plot
@@ -177,7 +171,7 @@ For example:
 ```{r}
 #' @title Plot Random Numbers
 #' @name RandomNumberPlotter
-#' @description Given a positive integer, generate two random draws from 
+#' @description Given a positive integer, generate two random drawns from 
 #'              the standard normal distribution and plot them against each other
 #' @section Class Constructor:
 #' \describe{
@@ -241,101 +235,3 @@ RandomNumberPlotter <- R6::R6Class(
 
 All comments should be above code, not beside it.
 
-***
-## Running Tests Locally <a name="testing"></a>
-
-We use Travis CI to automatically run unit tests and a serious of other automated checks on every PR commit and merge to `master`. Every `pkgnet` release also goes through a battery of automated tests run on CRAN before becoming officially available through CRAN.
-
-However, these options can lengthen your testing cycle and make the process of contributing tedious. If you wish to run tests locally on whatever machine you are developing `pkgnet` code on, run the following from the repo root:
-
-```{bash}
-./test.sh
-```
-***
-## Package Versioning <a name="version"></a>
-
-### Version Format
-We follow semantic versioning for `pkgnet` releases, `MAJOR`.`MINOR`.`PATCH`: 
-
-* the `MAJOR` version will be updated when incompatible API changes are made,   
-* the `MINOR` version will be updated when functionality is added in a backwards-compatible manner, and  
-* the `PATCH` version will be updated when backwards-compatible bug fixes are made.   
-
-In addition, the latest development version will have a .9999 appended to the end of the `MAJOR`.`MINOR`.`PATCH`. 
-
-For more details, see https://semver.org/
-
-### Release Planning
-The authors of this package have adopted [milestones on github](https://help.github.com/en/articles/about-milestones) as a vehile to scope and schedule upcoming releases.  The main goal for a release is written in the milestone description.  Then, any ideas, specific functionality, bugs, etcs submitted as [issues](https://help.github.com/en/articles/about-issues) pertinent to that goal are tagged for that milestone.  Goals for milestone are dicsused openly via a github issue.  
-
-Past and upcoming releases can be seen on the  [pkgnet milestones page](https://github.com/UptakeOpenSource/pkgnet/milestones). 
-
-
-***
-## Releasing to CRAN (for maintainer) <a name="cran"></a>
-
-Once substantial time has passed or significant changes have been made to `pkgnet`, a new release should be pushed to [CRAN](https://cran.r-project.org). 
-
-This is the exclusively the responsibility of the package maintainer, but is documented here for our own reference and to reflect the consensus reached between the maintainer and other contributors.
-
-This is a manual process, with the following steps.
-
-### Open a PR 
-
-Open a PR with a branch name `release/v0.0.0` (replacing 0.0.0 with the actual version number).
-
-Add a section for this release to `NEWS.md`.  This file details the new features, changes, and bug fixes that occurred since the last version.  
-
-Add a section for this release to `cran-comments.md`. This file holds details of our submission comments to CRAN and their responses to our submissions.  
-
-Change the `Version:` field in `DESCRIPTION` to the official version you want on CRAN (should not have a trailing `.9999`).
-
-Rebuild the documentation by running:
-
-```
-Rscript -e "devtools::document()"
-Rscript -e "install.packages('pkgdown', repos = 'cran.rstudio.com')"
-Rscript -e "pkgdown::build_site()"
-```
-
-`pkgdown` is changing pretty rapidly, so it's important to pull the latest from CRAN before building the site.
-
-Check in whichever of the files generated by `pkgdown` seem relevant to you. Anything that shows up as "modified" when you run `git status` should be checked in to the PR branch. New files ("not tracked by git") should be considered on a case-by-case basis.
-
-### Test on latest development version of R (i.e. "R-Devel") 
-
-This is a CRAN requirement.  [This docker based process](https://alexandereckert.com/post/testing-r-packages-with-latest-r-devel/) from Alexander Eckert is very useful.
-
-### Submit to CRAN
-
-Build the package tarball by running the following
-
-```
-R CMD BUILD .
-```
-
-Go to https://cran.r-project.org/submit.html and submit this new release! In the upload section, upload the tarball you just built.
-
-### Handle feedback from CRAN
-
-The maintainer will get an email from CRAN with the status of the submission. 
-
-If the submission is not accepted, do whatever CRAN asked you to do. Update `cran-comments.md` with some comments explaining the requested changes. Rebuild the `pkgdown` site. Repeat this process until the package gets accepted.
-
-### Merge the PR
-
-Once the submission is accepted, great! Update `cran-comments.md` and merge the PR.
-
-### Create a Release on GitHub
-
-We use [the releases section](https://github.com/UptakeOpenSource/pkgnet/releases) in the repo to categorize certain important commits as release checkpoints. This makes it easier for developers to associate changes in the source code with the release history on CRAN, and enables features like `devtools::install_github()` for old versions.
-
-Navigate to https://github.com/UptakeOpenSource/pkgnet/releases/new. Click the drop down in the "target" section, then click "recent commits". Choose the latest commit for the release PR you just merged. This will automatically create a [git tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) on that commit and tell Github which revision to build when people ask for a given release.
-
-Add some notes explaining what has changed since the previous release.
-
-### Open a new PR to begin development on the next version
-
-Now that everything is done, the last thing you have to do is move the repo ahead of the version you just pushed to CRAN.
-
-Make a PR that adds a `.9000` on the end of the version you just released. This is a common practice in open source software development. It makes it obvious that the code in source control is newer than what's available from package managers, but doesn't interfere with the [semantic versioning](https://semver.org/) components of the package version.

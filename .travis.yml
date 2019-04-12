@@ -2,14 +2,9 @@ language: R
 cache: packages
 warnings_are_errors: true
 
-os:
-  - linux
-  - osx
-
 before_install:
 - Rscript -e "install.packages('roxygen2', repos = 'http://cran.rstudio.org')"
 - Rscript -e "install.packages('devtools', repos = 'http://cran.rstudio.org')"
 
 after_success:
-    - cat "${RCHECK_DIR}/tests/testthat.Rout"
     - Rscript -e 'install.packages("covr"); covr::codecov()'
